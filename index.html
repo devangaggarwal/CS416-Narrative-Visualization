@@ -63,7 +63,7 @@ function render(data) {
 	yG.append("text") //add the y axis label
 		.attr("font-size", 22)
 		.attr("fill", "black")
-		.text("New Cases Per Day")
+		.text("New Deaths Per Day")
 		.attr("y", innerHeight / 2)
 		.attr("x", -90);
 	
@@ -111,7 +111,7 @@ d3.csv("countries.csv", function(d) { //for each entry
 	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
-			cases: +d["Data.Deaths"]
+			deaths: +d["Data.Deaths"]
 		};
 	}
 }).then(function(data) {
