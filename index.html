@@ -107,7 +107,7 @@ function render(data) {
 }
 
 let desiredCode = "USA";
-d3.csv("countries.csv", function(d) { //for each entry
+d3.csv("new_countries.csv", function(d) { //for each entry
 	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
