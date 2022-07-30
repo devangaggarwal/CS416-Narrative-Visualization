@@ -1,167 +1,134 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<html = lang="">
 
-<!-- Load d3.js -->
-<script src="https://d3js.org/d3.v4.js"></script>
-<style>
-.toolTip {
-  position: absolute;
-  display: none;
-  min-width: 80px;
-  height: auto;
-  background: none repeat scroll 0 0 #ADD8E6;
-  border: 1px solid #90EE90;
-  padding: 50px;
-  text-align: center;
-}
-</style>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peter's D3 Line Chart (COVID)</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
 <body>
-  <center><h1>US COVID-19 DATA - Jan 2022 to Current</h1></center>
-  <div>
-      <label for="state"><strong>Select State:</strong></label>
-      <select id="state">
-      </select>
-  </div>
-    
-
-<center>
-<div id="covid_19"></div>
+<script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
-var margin = {top: 10, right: 30, bottom: 80, left: 60},
-    height = 620 - margin.top - margin.bottom;
-    width = 600 - margin.left - margin.right;
+let svg = d3.select("body").append("svg")
+	.attr("width", 1440)
+	.attr("height", 750);
+
+//store the width and height for later
+let width = +svg.attr("width");
+let height = +svg.attr("height");
+
+//render the data
+function render(data) {
+
+	let xVal = d => d.date; //gets the date for a value d
+	let yVal = d => d.cases; //gets the cases amount for a value d
+
+	//set the margins
+	let margin = {
+		top: 100,
+		right: 150,
+		bottom: 100,
+		left: 325
+	};
+
+	//these set the width and height of the inner chart
+	let innerWidth = width - margin.left - margin.right;
+	let innerHeight = height - margin.top - margin.bottom;
+
+	/*
+
+	SET UP SCALES
+
+	*/
+
+	let scaleX = d3.scaleTime() //sets up how dates will scale
+		.domain([d3.min(data, xVal), d3.max(data, xVal)]).nice() //the data space, but nice() rounds it cleanly
+		.range([0, innerWidth]); //the pixel space
+
+	let xAxis = d3.axisBottom(scaleX) //the bottom axis is connected to the scaleX now
+		.tickSize(-innerHeight)
+		.tickPadding(20)
+		.ticks(12)
+		.tickFormat(d3.timeFormat("%b - %e"));
+
+	let scaleY = d3.scaleLinear() //sets up how cases, y axis values will scale
+		.domain([0, d3.max(data, yVal)]).nice()
+		.range([innerHeight, 0])
+
+	let yAxis = d3.axisLeft(scaleY) //left axis is connected to the scaleY now
+		.tickPadding(20)
+		.tickSize(-innerWidth);
+
+	let g = svg.append("g")
+		.attr("transform", `translate(${margin.left}, ${margin.top})`); //moves the chart out into clear space
+
+	let yG = g.append("g") //adds a grouping for the cases, y axis
+		.call(yAxis)
+		.attr("font-size", 16); //size of number of cases labels
+
+	yG.append("text") //add the y axis label
+		.attr("font-size", 22)
+		.attr("fill", "black")
+		.text("New Cases Per Day")
+		.attr("y", innerHeight / 2)
+		.attr("x", -90);
 	
-var svg = d3.select("#covid_19")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-var tooltip = d3.select("body").append("div")
-	.style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .style("background", "#ffffff")
-    .text("a simple tooltip");
+	let xG = g.append("g") //adds another axis grouping for the x axis, sets up labels and ticks
+		.call(xAxis)
+		.attr("transform", `translate(0, ${innerHeight})`) //moves the dates to bottom
+		.attr("font-size", 16);
 
-// Parse the Data
-d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv", function(data) {
-function(d){
-    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-  },
-var select = d3.select("#state")
-   .attr('class','select')
-    .on('change',onchange)
+	xG.append("text") //add the label below x axis
+		.attr("font-size", 22)
+		.attr("fill", "black")
+		.text("Month - Day")
+		.attr("y", 70)
+		.attr("x", innerWidth / 2);
 
-var options = select
-  .selectAll('option')
-    .data(d3.map(data, function(d){return d.state;}).keys())
-    .enter()
-	.append('option')
-	.text(function (d) { return d; })
-    .attr("value",function(d){return d;});
+	g.append("text") //adds another grouping for the name of the line chart
+		.attr("font-family", "sans-serif")
+		.text(desiredState + " COVID-19 New Cases Per Day, 2020")
+		.attr("font-size", 26)
+		.attr("y", -20)
+		.attr("x", innerWidth / 4);
 
-var selectState = "Washington";
-function onchange() {
-	selectState = d3.select('select').property('value')
-    d3.selectAll('svg').remove();
-    svg = d3.select("#covid_19")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-    displayChart(data, selectState);
-};
+	/*
 
-function filterData(data, s) {
-	var fData = data.filter(function(d) {
-        var year = d.date.substring(0,4);
-        var month = d.date.substring(5,7);
-        var day = d.date.substring(8,10);
-    	return d.state == s && year == "2022" && month <= "8" && day == "01"
-    });
-   
-	return fData;
-};
+	DRAW THE LINE
 
-displayChart(data, selectState);
+	*/
 
-function displayChart(data, selectState) {
-    var stateData = filterData(data, selectState);
-    console.log(stateData);
-    stateData.forEach(function(d) {
-        d.cases = d.cases/1000;
-        var year = d.date.substring(0,4);
-        var month = d.date.substring(5,7);
-        var day = d.date.substring(8,10);
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var monthValue = months[parseInt(month) - 1];
-        d.date = monthValue;
-    });
-    // X axis
-     var x = d3.scaleBand()
-      .range([ 0, width ])
-      .domain(d3.map(stateData, function(d){return d.date;}).keys())
-      .padding(0.2);
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+	let line = d3.line() //defines the x and y of the line
+		.x(d => scaleX(xVal(d)))
+		.y(d => scaleY(yVal(d)));
 
-    var casesMin = d3.min(stateData, function(d) { return d.cases; } );
-    var casesMax = d3.max(stateData, function(d) { return d.cases; } );
-    console.log(casesMin, casesMax);
-
-    // Add Y axis
-   var y = d3.scaleLinear()
-      .domain([0, casesMax])
-      .range([ height, 0])
-    svg.append("g")
-      .call(d3.axisLeft(y).ticks(5));
-
-    // Add the text label for the Y axis
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x",0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Cases(in 1000s)");
-
-    // Bars
-    svg.append("path")
-      .attr("x", function(d) { 
-        	return x(d.date);
-        })
-      .data(stateData)
-      .enter()
-      .attr("width", x.bandwidth())
-      .attr("fill", "#69b3a2")
-       // no bar at the beginning thus:
-        .attr("height", function(d) { return height - y(0); }) // always equal to 0
-        .attr("y", function(d) { return y(0); })
-        .on("mouseover", function(d){tooltip.text("Deaths:\n" + d.deaths); return tooltip.style("visibility", "visible");})
-      .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-      .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
-
-    // Animation
-    svg.selectAll("line")
-      .transition()
-      .duration(800)
-      .attr("y", function(d) { return y(d.cases); })
-      .attr("height", function(d) {  	
-            return Math.max(height - y(d.cases), 0);
-       })
-      .delay(function(d,i){console.log(i) ; return(i*100)})
+	g.append("path") //add the line or path
+		.datum(data)
+		.attr("fill", "none")
+		.attr("stroke", "#00A15F")
+		.attr("stroke-width", 2)
+		.attr("stroke-linejoin", "round") //smooths line a bit
+		.attr("stroke-linecap", "round") //smooths line a bit
+		.attr("d", line); //call line to draw line
 }
-    });
+
+let desiredState = "California";
+d3.csv("us.csv", function(d) { //for each entry
+	if (d["Location.Country"] == desiredState && +d["Date.Year"] == 2020) {
+		return {	//parse date from multiple entries
+			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
+			cases: +d["Data.Cases"]
+		};
+	}
+}).then(function(data) {
+	render(data); //then render the data as it has been fully processed
+});
 </script>
 </body>
-	</center>
-
-
+</html>
