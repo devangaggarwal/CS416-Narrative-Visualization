@@ -25,7 +25,7 @@
   </div>
     
 <!-- Create a div where the graph will take place -->
-<div id="#covid_19"></div>
+<div id="my_dataviz"></div>
 <script>
 
 
@@ -35,7 +35,7 @@ var margin = {top: 10, right: 30, bottom: 90, left: 60},
     height = 450 - margin.top - margin.bottom;
   
 // append the svg object to the body of the page
-var svg = d3.select("#covid_19")
+var svg = d3.select("#my_dataviz")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -68,7 +68,7 @@ var selectState = "Washington";
 function onchange() {
 	selectState = d3.select('select').property('value')
     d3.selectAll('svg').remove();
-    svg = d3.select("#covid_19")
+    svg = d3.select("#my_dataviz")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
