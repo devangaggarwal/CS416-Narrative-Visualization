@@ -93,7 +93,7 @@ function render(data) {
 
 	g.append("text") //adds another grouping for the name of the line chart
 		.attr("font-family", "sans-serif")
-		.text(desiredContinent + " COVID-19 New Cases Per Day, 2020")
+		.text(desiredCountry + " COVID-19 New Cases Per Day, 2020")
 		.attr("font-size", 26)
 		.attr("y", -20)
 		.attr("x", innerWidth / 4);
@@ -118,9 +118,9 @@ function render(data) {
 		.attr("d", line); //call line to draw line
 }
 
-let desiredContinent = "Asia";
+let desiredCountry = "United_States_of_America";
 d3.csv("countries.csv", function(d) { //for each entry
-	if (d["Location.Continent"] == desiredContinent && +d["Date.Year"] == 2020) {
+	if (d["Location.Continent"] == desiredCountry && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
 			cases: +d["Data.Cases"]
