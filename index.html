@@ -119,7 +119,7 @@ function render(data) {
 }
 
 let desiredCountry = "Ireland";
-d3.csv("covid.csv", function(d) { //for each entry
+d3.csv("countries.csv", function(d) { //for each entry
 	if (d["Location.Country"] == desiredCountry && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
