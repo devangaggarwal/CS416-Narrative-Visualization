@@ -16,153 +16,72 @@
 }
 </style>
 <body>
-  <center><h1>US COVID-19 DATA - Jan 2020 to Current</h1></center>
+  <center><h1>US COVID-19 DATA - Jan 2022 to Current</h1></center>
   <div>
       <label for="state"><strong>Select State:</strong></label>
       <select id="state">
       </select>
   </div>
     
-<!-- Create a div where the graph will take place -->
+
 <center>
 <div id="covid_19"></div>
 <script>
-
+<script>
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 80, left: 60},
-    width = 600 - margin.left - margin.right,
-    height = 620 - margin.top - margin.bottom;
-  
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
 // append the svg object to the body of the page
-var svg = d3.select("#covid_19")
+var svg = d3.select("#my_dataviz")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-var tooltip = d3.select("body").append("div")
-	.style("position", "absolute")
-    .style("z-index", "10")
-    .style("visibility", "hidden")
-    .style("background", "#ffffff")
-    .text("a simple tooltip");
 
-// Parse the Data
-d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv", function(data) {
+//Read the data
+d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",
 
-var select = d3.select("#state")
-   .attr('class','select')
-    .on('change',onchange)
+  // When reading the csv, I must format variables:
+  function(d){
+    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  },
 
-var options = select
-  .selectAll('option')
-    .data(d3.map(data, function(d){return d.state;}).keys())
-    .enter()
-	.append('option')
-	.text(function (d) { return d; })
-    .attr("value",function(d){return d;});
+  // Now I can use this dataset:
+  function(data) {
 
-var selectState = "Washington";
-function onchange() {
-	selectState = d3.select('select').property('value')
-    d3.selectAll('svg').remove();
-    svg = d3.select("#covid_19")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-    displayChart(data, selectState);
-};
-
-function filterData(data, s) {
-	var fData = data.filter(function(d) {
-        var year = d.date.substring(0,4);
-        var month = d.date.substring(5,7);
-        var day = d.date.substring(8,10);
-    	return d.state == s && year == "2022" && month <= "8" && day == "01"
-    });
-   
-	return fData;
-};
-
-displayChart(data, selectState);
-
-function displayChart(data, selectState) {
-    var stateData = filterData(data, selectState);
-    console.log(stateData);
-    stateData.forEach(function(d) {
-        d.cases = d.cases/1000;
-        var year = d.date.substring(0,4);
-        var month = d.date.substring(5,7);
-        var day = d.date.substring(8,10);
-        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var monthValue = months[parseInt(month) - 1];
-        d.date = monthValue;
-    });
-    // X axis
-     var x = d3.scaleBand()
-      .range([ 0, width ])
-      .domain(d3.map(stateData, function(d){return d.date;}).keys())
-      .padding(0.2);
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, width ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-      .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
-
-    var casesMin = d3.min(stateData, function(d) { return d.cases; } );
-    var casesMax = d3.max(stateData, function(d) { return d.cases; } );
-    console.log(casesMin, casesMax);
+      .call(d3.axisBottom(x));
 
     // Add Y axis
     var y = d3.scaleLinear()
-      .domain([0, casesMax])
-      .range([ height, 0])
+      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      .range([ height, 0 ]);
     svg.append("g")
-      .call(d3.axisLeft(y).ticks(5));
+      .call(d3.axisLeft(y));
 
-    // Add the text label for the Y axis
-    svg.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left)
-      .attr("x",0 - (height / 2))
-      .attr("dy", "1em")
-      .style("text-anchor", "middle")
-      .text("Cases(in 1000s)");
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) })
+        )
 
-    // Bars
-    svg.selectAll("mybar")
-      .data(stateData)
-      .enter()
-      .append("rect")
-        .attr("x", function(d) { 
-        	return x(d.date);
-        })
-        .attr("width", x.bandwidth())
-        .attr("fill", "#69b3a2")
-        // no bar at the beginning thus:
-        .attr("height", function(d) { return height - y(0); }) // always equal to 0
-        .attr("y", function(d) { return y(0); })
-        .on("mouseover", function(d){tooltip.text("Deaths:\n" + d.deaths); return tooltip.style("visibility", "visible");})
-      .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
-      .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+})
 
-    // Animation
-    svg.selectAll("rect")
-      .transition()
-      .duration(800)
-      .attr("y", function(d) { return y(d.cases); })
-      .attr("height", function(d) {  	
-            return Math.max(height - y(d.cases), 0);
-       })
-      .delay(function(d,i){console.log(i) ; return(i*100)})
-}
-    });
 </script>
-</body>
-	</center>
+
+
