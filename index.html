@@ -122,8 +122,8 @@ let desiredState = "California";
 d3.csv("us.csv", function(d) { //for each entry
 	if (d["state"] == desiredState && +d["date"] == 2020) {
 		return {	//parse date from multiple entries
-			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
-			cases: +d["Data.Cases"]
+			date: d3.timeParse("%Y-%m-%d")(d["date"] + "-" + d["date"] + "-" + d["date"]),
+			cases: +d["cases"]
 		};
 	}
 }).then(function(data) {
