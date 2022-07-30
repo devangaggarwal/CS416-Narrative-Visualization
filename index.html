@@ -26,8 +26,8 @@ let height = +svg.attr("height");
 //render the data
 function render(data) {
 
-	let xVal = d => d.date; //gets the date for a value d
-	let yVal = d => d.cases; //gets the cases amount for a value d
+	let xVal = d => date; //gets the date for a value d
+	let yVal = d => cases; //gets the cases amount for a value d
 
 	//set the margins
 	let margin = {
@@ -120,9 +120,9 @@ function render(data) {
 
 let desiredState = "California";
 d3.csv("us.csv", function(d) { //for each entry
-	if (d["state"] == desiredState && +d["date"] == 2020) {
+	if (d["state"] == desiredState) {
 		return {	//parse date from multiple entries
-			date: d3.timeParse("%Y-%m-%d")(d["date"] + "-" + d["date"] + "-" + d["date"]),
+			date: d3.timeParse("%Y-%m-%d")(d["date"]),
 			cases: +d["cases"]
 		};
 	}
