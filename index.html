@@ -31,7 +31,7 @@
 
 
 // set the dimensions and margins of the graph
-var margin = {top: 100, right: 130, bottom: 200, left: 160},
+var margin = {top: 10, right: 30, bottom: 80, left: 60},
     width = 460 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom;
   
@@ -84,7 +84,7 @@ function filterData(data, s) {
         var year = d.date.substring(0,4);
         var month = d.date.substring(5,7);
         var day = d.date.substring(8,10);
-    	return d.state == s && year == "2020" && year == "2021" && year == "2022" && month <= "12" && day == "31"
+    	return d.state == s && year == "2022" && month <= "8" && day == "01"
     });
    
 	return fData;
