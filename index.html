@@ -26,8 +26,8 @@ let height = +svg.attr("height");
 //render the data
 function render(data) {
 
-	let xVal = d => date; //gets the date for a value d
-	let yVal = d => cases; //gets the cases amount for a value d
+	let xVal = d => d.date; //gets the date for a value d
+	let yVal = d => d.cases; //gets the cases amount for a value d
 
 	//set the margins
 	let margin = {
@@ -93,7 +93,7 @@ function render(data) {
 
 	g.append("text") //adds another grouping for the name of the line chart
 		.attr("font-family", "sans-serif")
-		.text(desiredState + " COVID-19 New Cases Per Day, 2020")
+		.text(desiredCountry + " COVID-19 New Cases Per Day, 2020")
 		.attr("font-size", 26)
 		.attr("y", -20)
 		.attr("x", innerWidth / 4);
@@ -118,12 +118,12 @@ function render(data) {
 		.attr("d", line); //call line to draw line
 }
 
-let desiredState = "California";
-d3.csv("us.csv", function(d) { //for each entry
-	if (d["state"] == desiredState) {
+let desiredCountry = "Ireland";
+d3.csv("covid.csv", function(d) { //for each entry
+	if (d["Location.Country"] == desiredCountry && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
-			date: d3.timeParse("%Y-%m-%d")(d["date"]),
-			cases: +d["cases"]
+			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
+			cases: +d["Data.Cases"]
 		};
 	}
 }).then(function(data) {
