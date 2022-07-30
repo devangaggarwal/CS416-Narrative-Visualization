@@ -120,7 +120,7 @@ function render(data) {
 
 let desiredCountry = "United_States_of_America";
 d3.csv("countries.csv", function(d) { //for each entry
-	if (d["Location.Continent"] == desiredCountry && +d["Date.Year"] == 2020) {
+	if (d["Location.Country"] == desiredCountry && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
 			cases: +d["Data.Cases"]
