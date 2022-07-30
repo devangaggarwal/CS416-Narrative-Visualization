@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
 
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<style>
+.toolTip {
+  position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #ffffff;
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: center;
+}
+</style>
+<body>
+<h1>US COVID-19 Data: March 2020-current</h1>
+  <div>
+      <label for="state"><strong>Select State:</strong></label>
+      <select id="state">
+      </select>
+      
+  </div>
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+<script>
+  
+  
