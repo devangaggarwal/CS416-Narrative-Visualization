@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peter's D3 Line Chart (COVID)</title>
+  <title>Devang's D3 Line Chart (COVID)</title>
   <style>
     body {
       padding: 0;
@@ -120,7 +120,7 @@ function render(data) {
 
 let desiredState = "California";
 d3.csv("us.csv", function(d) { //for each entry
-	if (d["Location.Country"] == desiredState && +d["Date.Year"] == 2020) {
+	if (d["state"] == desiredState && +d["date"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
 			cases: +d["Data.Cases"]
