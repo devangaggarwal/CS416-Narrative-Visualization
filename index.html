@@ -30,19 +30,20 @@
 const width = 1600;
 const height = 900;
 const margin = 75;
-			var x = d3.scaleBand()
-			.domain(countries)
-			.range([0, 1200]);
-			var log_y = d3.scaleLog()
-			.domain([40, 5000000])
-			.range([700, 0]);
-			var log_ys = d3.scaleLog()
-			.domain([40, 5000000])
-			.range([0, 700]);
-			var lin_y = d3.scaleLinear()
-			.domain([0, 5000000])
-			.range([700, 0]);
-			var lin_ys = d3.scaleLinear()
-			.domain([0, 5000000])
-			.range([0, 700]);
+const margin = 75;
+var x = d3.scaleBand()
+.domain(countries)
+.range([0, 1200]);
+var log_y = d3.scaleLog()
+.domain([40, 5000000])
+.range([700, 0]);
+var log_ys = d3.scaleLog()
+.domain([40, 5000000])
+.range([0, 700]);
+var lin_y = d3.scaleLinear()
+.domain([0, 5000000])
+.range([700, 0]);
+var lin_ys = d3.scaleLinear()
+.domain([0, 5000000])
+.range([0, 700]);
   
