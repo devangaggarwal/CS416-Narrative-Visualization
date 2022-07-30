@@ -28,38 +28,94 @@
 <div id="covid_19"></div>
 <script>
 
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
+
+var margin = {top: 10, right: 30, bottom: 80, left: 60},
+    height = 620 - margin.top - margin.bottom;
+    width = 600 - margin.left - margin.right;
+  
+
+var svg = d3.select("#covid_19")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+var tooltip = d3.select("body").append("div")
+	.style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("background", "#ffffff")
+    .text("a simple tooltip");
+
+// Parse the Data
+d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv", function(data) {
+function(d){
+    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  },
+var select = d3.select("#state")
+   .attr('class','select')
+    .on('change',onchange)
+
+var options = select
+  .selectAll('option')
+    .data(d3.map(data, function(d){return d.state;}).keys())
+    .enter()
+	.append('option')
+	.text(function (d) { return d; })
+    .attr("value",function(d){return d;});
+
+var selectState = "Washington";
+function onchange() {
+	selectState = d3.select('select').property('value')
+    d3.selectAll('svg').remove();
+    svg = d3.select("#covid_19")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
+    displayChart(data, selectState);
+};
 
-//Read the data
-d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",
+function filterData(data, s) {
+	var fData = data.filter(function(d) {
+        var year = d.date.substring(0,4);
+        var month = d.date.substring(5,7);
+        var day = d.date.substring(8,10);
+    	return d.state == s && year == "2022" && month <= "8" && day == "01"
+    });
+   
+	return fData;
+};
 
-  // When reading the csv, I must format variables:
-  function(d){
-    return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-  },
+displayChart(data, selectState);
 
-  // Now I can use this dataset:
-  function(data) {
-
-    // Add X axis --> it is a date format
-    var x = d3.scaleTime()
+function displayChart(data, selectState) {
+    var stateData = filterData(data, selectState);
+    console.log(stateData);
+    stateData.forEach(function(d) {
+        d.cases = d.cases/1000;
+        var year = d.date.substring(0,4);
+        var month = d.date.substring(5,7);
+        var day = d.date.substring(8,10);
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var monthValue = months[parseInt(month) - 1];
+        d.date = monthValue;
+    });
+    // X axis
+     var x = d3.scaleTime()
       .domain(d3.extent(data, function(d) { return d.date; }))
       .range([ 0, width ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
+
+    var casesMin = d3.min(stateData, function(d) { return d.cases; } );
+    var casesMax = d3.max(stateData, function(d) { return d.cases; } );
+    console.log(casesMin, casesMax);
 
     // Add Y axis
     var y = d3.scaleLinear()
@@ -68,7 +124,16 @@ d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states
     svg.append("g")
       .call(d3.axisLeft(y));
 
-    // Add the line
+    // Add the text label for the Y axis
+    svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Cases(in 1000s)");
+
+    // Bars
     svg.append("path")
       .datum(data)
       .attr("fill", "none")
@@ -81,6 +146,19 @@ d3.csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states
 
 })
 
+    // Animation
+    svg.selectAll("line")
+      .transition()
+      .duration(800)
+      .attr("y", function(d) { return y(d.cases); })
+      .attr("height", function(d) {  	
+            return Math.max(height - y(d.cases), 0);
+       })
+      .delay(function(d,i){console.log(i) ; return(i*100)})
+}
+    });
 </script>
-  </body>
+</body>
+	</center>
+
 
