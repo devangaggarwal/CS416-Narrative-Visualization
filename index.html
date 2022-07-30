@@ -1,17 +1,5 @@
 <!DOCTYPE html>
 <html = lang="">
-
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Devang's D3 Line Chart (COVID)</title>
-  <style>
-    body {
-      padding: 0;
-      margin: 0;
-    }
-  </style>
-</head>
 <body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
@@ -27,7 +15,7 @@ let height = +svg.attr("height");
 function render(data) {
 
 	let xVal = d => d.date; //gets the date for a value d
-	let yVal = d => d.cases; //gets the cases amount for a value d
+	let yVal = d => d.deaths; //gets the cases amount for a value d
 
 	//set the margins
 	let margin = {
@@ -93,7 +81,7 @@ function render(data) {
 
 	g.append("text") //adds another grouping for the name of the line chart
 		.attr("font-family", "sans-serif")
-		.text(desiredCode + " COVID-19 New Cases Per Day, 2020")
+		.text(desiredCode + " COVID-19 New Deaths Per Day")
 		.attr("font-size", 26)
 		.attr("y", -20)
 		.attr("x", innerWidth / 4);
@@ -120,10 +108,10 @@ function render(data) {
 
 let desiredCode = "USA";
 d3.csv("countries.csv", function(d) { //for each entry
-	if (d["Location.Code"] == desiredCode&& +d["Date.Year"] == 2020) {
+	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
-			cases: +d["Data.Cases"]
+			cases: +d["Data.Deaths"]
 		};
 	}
 }).then(function(data) {
