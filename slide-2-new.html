@@ -85,7 +85,7 @@ function displayChart(data, selectState) {
     var stateData = filterData(data, selectState);
     console.log(stateData);
     stateData.forEach(function(d) {
-        d.deaths= d.deaths/1000;
+        d.deaths= d.deaths;
         var year = d.date.substring(0,4);
         var month = d.date.substring(5,7);
         var day = d.date.substring(8,10);
@@ -134,7 +134,7 @@ function displayChart(data, selectState) {
         	return x(d.date);
         })
         .attr("width", x.bandwidth())
-        .attr("fill", "#69b3a2")
+        .attr("fill", "#ADD8E6")
         // no bar at the beginning thus:
         .attr("height", function(d) { return height - y(0); }) // always equal to 0
         .attr("y", function(d) { return y(0); })
