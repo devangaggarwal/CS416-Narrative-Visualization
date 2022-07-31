@@ -3,20 +3,9 @@
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>
-<style>
-.toolTip {
-  position: absolute;
-  display: none;
-  min-width: 80px;
-  height: auto;
-  background: none repeat scroll 0 0 #ffffff;
-  border: 1px solid #6F257F;
-  padding: 14px;
-  text-align: center;
-}
-</style>
+<center>
 <body>
-<h1>United States Covid 19 Data - 2021</h1>
+	<center><h1>State-by-State Data - 2022</h1></center>
   <div>
       <label for="state"><strong>Select State:</strong></label>
       <select id="state">
@@ -31,8 +20,8 @@
 
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 90, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 450 - margin.top - margin.bottom;
+    width = 720 - margin.left - margin.right,
+    height = 710 - margin.top - margin.bottom;
   
 // append the svg object to the body of the page
 var svg = d3.select("#my_dataviz")
@@ -83,7 +72,7 @@ function filterData(data, s) {
         var year = d.date.substring(0,4);
         var month = d.date.substring(5,7);
         var day = d.date.substring(8,10);
-    	return d.state == s && year == "2021" && month <= "07" && day == "01"
+    	return d.state == s && year == "2022" && month <= "08" && day == "01"
     });
    
 	return fData;
@@ -165,3 +154,4 @@ function displayChart(data, selectState) {
     });
 </script>
 </body>
+</center>
