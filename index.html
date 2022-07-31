@@ -119,29 +119,6 @@ d3.csv("new_countries.csv", function(d) { //for each entry
 		};
 	}
 }).then(function(data) {
-	var annotations = [ {
-      note: {
-        label: "My first annotation",
-        wrap: x(40)-x(29),
-    	},
-      dx:50,
-      dy:50,
-      type:d3.annotationLabel
-    }
-   ]
-
-    var makeAnnotations = d3.annotation()
-                .notePadding(0)
-                .accessors({
-                  x: function(d){return x(d.x)+margin.left},
-                  y: function(d){return y0(d.y)+margin.top}
-                })
-                .annotations(annotations)
-
-      d3.select("svg")
-        .append("g")
-        .attr("class", "annotation-group")
-        .call(makeAnnotations)
 	render(data); //then render the data as it has been fully processed
 	
 });
