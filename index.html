@@ -72,12 +72,6 @@ function render(data) {
 
 	let g = svg.append("g")
 		.attr("transform", `translate(${margin.left}, ${margin.top})`); //moves the chart out into clear space
-	makeAnnotations = d3.annotation()
-        .annotations(annotations)
-
-        svg.append('g')
-        .attr('class', 'annotation-group')
-        .call(makeAnnotations)
 
 	let yG = g.append("g") //adds a grouping for the cases, y axis
 		.call(yAxis)
@@ -118,7 +112,7 @@ function render(data) {
 	let line = d3.line() //defines the x and y of the line
 		.x(d => scaleX(xVal(d)))
 		.y(d => scaleY(yVal(d)));
-
+	
 	g.append("path") //add the line or path
 		.datum(data)
 		.attr("fill", "none")
@@ -127,8 +121,15 @@ function render(data) {
 		.attr("stroke-linejoin", "round") //smooths line a bit
 		.attr("stroke-linecap", "round") //smooths line a bit
 		.attr("d", line); //call line to draw line
+	
+	
 }	
+makeAnnotations = d3.annotation()
+        .annotations(annotations)
 
+        svg.append('g')
+        .attr('class', 'annotation-group')
+        .call(makeAnnotations)
 let desiredCode = "USA";
 d3.csv("new_countries.csv", function(d) { //for each entry
 	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
