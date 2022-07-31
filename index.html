@@ -65,12 +65,6 @@ function render(data) {
         },
         type:d3.annotationCalloutCircle
        }]
-	makeAnnotations = d3.annotation()
-        .annotations(annotations)
-
-       svg.append('g')
-        .attr('class', 'annotation-group')
-        .call(makeAnnotations)
 
 	let yAxis = d3.axisLeft(scaleY) //left axis is connected to the scaleY now
 		.tickPadding(20)
@@ -78,6 +72,12 @@ function render(data) {
 
 	let g = svg.append("g")
 		.attr("transform", `translate(${margin.left}, ${margin.top})`); //moves the chart out into clear space
+	makeAnnotations = d3.annotation()
+        .annotations(annotations)
+
+        svg.append('g')
+        .attr('class', 'annotation-group')
+        .call(makeAnnotations)
 
 	let yG = g.append("g") //adds a grouping for the cases, y axis
 		.call(yAxis)
