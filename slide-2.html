@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html = lang="">
+<center>
 <body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
 let svg = d3.select("body").append("svg")
-	.attr("width", 850)
-	.attr("height", 400);
+	.attr("width", 1500)
+	.attr("height", 800);
 
 //store the width and height for later
 let width = +svg.attr("width");
@@ -121,4 +122,6 @@ d3.csv("new_countries.csv", function(d) { //for each entry
 
 </script>
 </body>
+	</center>
+<center><a href="slide-3.html">Next Slide</a></center>
 </html>
