@@ -1,6 +1,6 @@
 let svg = d3.select("body").append("svg")
-	.attr("width", 850)
-	.attr("height", 400);
+	.attr("width", 1440)
+	.attr("height", 750);
 
 //store the width and height for later
 let width = +svg.attr("width");
@@ -10,7 +10,7 @@ let height = +svg.attr("height");
 function render(data) {
 
 	let xVal = d => d.date; //gets the date for a value d
-	let yVal = d => d.deaths; //gets the cases amount for a value d
+	let yVal = d => d.cases; //gets the cases amount for a value d
 
 	//set the margins
 	let margin = {
@@ -38,7 +38,7 @@ function render(data) {
 		.tickSize(-innerHeight)
 		.tickPadding(20)
 		.ticks(12)
-		.tickFormat(d3.timeFormat("%b"));
+		.tickFormat(d3.timeFormat("%b - %e"));
 
 	let scaleY = d3.scaleLinear() //sets up how cases, y axis values will scale
 		.domain([0, d3.max(data, yVal)]).nice()
@@ -58,7 +58,7 @@ function render(data) {
 	yG.append("text") //add the y axis label
 		.attr("font-size", 22)
 		.attr("fill", "black")
-		.text("New Deaths")
+		.text("New Cases Per Day")
 		.attr("y", innerHeight / 2)
 		.attr("x", -90);
 	
@@ -70,13 +70,13 @@ function render(data) {
 	xG.append("text") //add the label below x axis
 		.attr("font-size", 22)
 		.attr("fill", "black")
-		.text("Month")
+		.text("Month - Day")
 		.attr("y", 70)
 		.attr("x", innerWidth / 2);
 
 	g.append("text") //adds another grouping for the name of the line chart
 		.attr("font-family", "sans-serif")
-		.text(desiredCode + " COVID-19 Deaths - 2022")
+		.text(desiredCountry + " COVID-19 New Cases Per Day, 2020")
 		.attr("font-size", 26)
 		.attr("y", -20)
 		.attr("x", innerWidth / 4);
@@ -100,14 +100,13 @@ function render(data) {
 		.attr("stroke-linecap", "round") //smooths line a bit
 		.attr("d", line); //call line to draw line
 }
-	
 
-let desiredCode = "USA";
-d3.csv("new_countries.csv", function(d) { //for each entry
-	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
+let desiredCountry = "Ireland";
+d3.csv("covid.csv", function(d) { //for each entry
+	if (d["Location.Country"] == desiredCountry && +d["Date.Year"] == 2020) {
 		return {	//parse date from multiple entries
 			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
-			deaths: +d["Data.Deaths"]
+			cases: +d["Data.Cases"]
 		};
 	}
 }).then(function(data) {
