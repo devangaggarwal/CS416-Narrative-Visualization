@@ -49,7 +49,7 @@ function render(data) {
 		.tickSize(-innerHeight)
 		.tickPadding(20)
 		.ticks(12)
-		.tickFormat(d3.timeFormat("%b - %e"));
+		.tickFormat(d3.timeFormat("%b"));
 
 	let scaleY = d3.scaleLinear() //sets up how cases, y axis values will scale
 		.domain([0, d3.max(data, yVal)]).nice()
