@@ -13,40 +13,6 @@ let svg = d3.select("body").append("svg")
 //store the width and height for later
 let width = +svg.attr("width");
 let height = +svg.attr("height");
-annotations = [{
-        note: {
-          label: "00:00",
-          title: "You"
-        },
-        x:x(0),
-        y:500/2,
-        dy: 20,
-        dx: 20,
-        subject: {
-          radius: 10,
-          radiusPadding: 5
-        },
-        type:d3.annotationCalloutCircle
-      }]
-       makeAnnotations = d3.annotation()
-        .annotations(annotations)
-
-      svg.append('g')
-        .attr('class', 'annotation-group')
-        .call(makeAnnotations)
-	d3.select('.annotation-group')
-      .transition()
-      .duration(4000)
-      .tween('updateAnno',function(d){
-        xTrans = d3.interpolateNumber(0,200)
-        timeTrans = d3.interpolateDate(new Date("January 01, 2019 00:00:00"),new Date(new Date("January 01, 2019 00:00:00").getTime()+200*60000))
-        return function(t){
-          annotations[0].x = x(xTrans(t));
-          annotations[0].note.label = d3.timeFormat("%H:%M")(timeTrans(t))
-          makeAnnotations.annotations(annotations)
-          makeAnnotations.update()
-        }
-      })
 
 //render the data
 function render(data) {
