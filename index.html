@@ -87,6 +87,7 @@ function render(data) {
 		.attr("font-size", 26)
 		.attr("y", -20)
 		.attr("x", innerWidth / 4);
+	
 
 	/*
 
@@ -106,9 +107,42 @@ function render(data) {
 		.attr("stroke-linejoin", "round") //smooths line a bit
 		.attr("stroke-linecap", "round") //smooths line a bit
 		.attr("d", line); //call line to draw line
-	
-	
-}	
+	annotations = [{
+        note: {
+          label: "00:00",
+          title: "You"
+        },
+        x:x(0),
+        y:500/2,
+        dy: 20,
+        dx: 20,
+        subject: {
+          radius: 10,
+          radiusPadding: 5
+        },
+        type:d3.annotationCalloutCircle
+      }]
+       makeAnnotations = d3.annotation()
+        .annotations(annotations)
+
+      svg.append('g')
+        .attr('class', 'annotation-group')
+        .call(makeAnnotations)
+	d3.select('.annotation-group')
+      .transition()
+      .duration(4000)
+      .tween('updateAnno',function(d){
+        xTrans = d3.interpolateNumber(0,200)
+        timeTrans = d3.interpolateDate(new Date("January 01, 2019 00:00:00"),new Date(new Date("January 01, 2019 00:00:00").getTime()+200*60000))
+        return function(t){
+          annotations[0].x = x(xTrans(t));
+          annotations[0].note.label = d3.timeFormat("%H:%M")(timeTrans(t))
+          makeAnnotations.annotations(annotations)
+          makeAnnotations.update()
+        }
+      })
+}
+
 
 let desiredCode = "USA";
 d3.csv("new_countries.csv", function(d) { //for each entry
