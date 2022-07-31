@@ -85,7 +85,7 @@ function displayChart(data, selectState) {
     var stateData = filterData(data, selectState);
     console.log(stateData);
     stateData.forEach(function(d) {
-        d.cases = d.cases/1000;
+        d.deaths= d.deaths/1000;
         var year = d.date.substring(0,4);
         var month = d.date.substring(5,7);
         var day = d.date.substring(8,10);
@@ -105,13 +105,13 @@ function displayChart(data, selectState) {
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
 
-    var casesMin = d3.min(stateData, function(d) { return d.cases; } );
-    var casesMax = d3.max(stateData, function(d) { return d.cases; } );
-    console.log(casesMin, casesMax);
+    var deathsMin = d3.min(stateData, function(d) { return d.deaths; } );
+    var deathsMax = d3.max(stateData, function(d) { return d.deaths; } );
+    console.log(deathsMin, deathsMax);
 
     // Add Y axis
     var y = d3.scaleLinear()
-      .domain([0, casesMax])
+      .domain([0, deathsMax])
       .range([ height, 0])
     svg.append("g")
       .call(d3.axisLeft(y).ticks(5));
@@ -123,7 +123,7 @@ function displayChart(data, selectState) {
       .attr("x",0 - (height / 2))
       .attr("dy", "1em")
       .style("text-anchor", "middle")
-      .text("Cases(in 1000s)");
+      .text("Deaths");
 
     // Bars
     svg.selectAll("mybar")
@@ -138,7 +138,7 @@ function displayChart(data, selectState) {
         // no bar at the beginning thus:
         .attr("height", function(d) { return height - y(0); }) // always equal to 0
         .attr("y", function(d) { return y(0); })
-        .on("mouseover", function(d){tooltip.text("Deaths:\n" + d.deaths); return tooltip.style("visibility", "visible");})
+        .on("mouseover", function(d){tooltip.text("Cases:\n" + d.cases); return tooltip.style("visibility", "visible");})
       .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
       .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 
@@ -146,9 +146,9 @@ function displayChart(data, selectState) {
     svg.selectAll("rect")
       .transition()
       .duration(800)
-      .attr("y", function(d) { return y(d.cases); })
+      .attr("y", function(d) { return y(d.deaths); })
       .attr("height", function(d) {  	
-            return Math.max(height - y(d.cases), 0);
+            return Math.max(height - y(d.deaths), 0);
        })
       .delay(function(d,i){console.log(i) ; return(i*100)})
 }
