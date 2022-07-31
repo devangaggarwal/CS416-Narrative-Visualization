@@ -2,12 +2,14 @@
 <html = lang="">
 <body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
-  <div>
+<div>
       <label for="state"><strong>Select State:</strong></label>
       <select id="state">
       </select>
       
   </div>
+<div id="my_dataviz"></div>
+<script src='us-states.js'></script>
 <script>
 let svg = d3.select("body").append("svg")
 	.attr("width", 1440)
