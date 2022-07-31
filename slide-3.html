@@ -104,7 +104,7 @@ function render(data) {
 }
 	
 
-let desiredCode = "CHN";
+let desiredCode = "GER";
 d3.csv("new_countries.csv", function(d) { //for each entry
 	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
 		return {	//parse date from multiple entries
