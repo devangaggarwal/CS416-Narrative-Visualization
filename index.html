@@ -106,7 +106,8 @@ function render(data) {
 		.attr("stroke-linejoin", "round") //smooths line a bit
 		.attr("stroke-linecap", "round") //smooths line a bit
 		.attr("d", line); //call line to draw line
-      var parseDate = function(d){ return d3.timeParse("%Y-%m-%d")(d)}
+}
+var parseDate = function(d){ return d3.timeParse("%Y-%m-%d")(d)}
       const annotations = [
        // first annotation
         {
@@ -151,9 +152,7 @@ function render(data) {
         .annotations(annotations)
      
         svg.append("g")
-    .call(makeAnnotations)
-}
-	
+    .call(makeAnnotations)	
 
 let desiredCode = "USA";
 d3.csv("new_countries.csv", function(d) { //for each entry
