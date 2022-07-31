@@ -106,21 +106,7 @@ function render(data) {
 		.attr("stroke-linejoin", "round") //smooths line a bit
 		.attr("stroke-linecap", "round") //smooths line a bit
 		.attr("d", line); //call line to draw line
-}
-	
-
-let desiredCode = "USA";
-d3.csv("new_countries.csv", function(d) { //for each entry
-	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
-		return {	//parse date from multiple entries
-			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
-			deaths: +d["Data.Deaths"]
-		};
-	}
-}).then(function(data) {
-	render(data); //then render the data as it has been fully processed
-});
-var parseDate = function(d){ return d3.timeParse("%Y-%m-%d")(d)}
+      var parseDate = function(d){ return d3.timeParse("%Y-%m-%d")(d)}
       const annotations = [
        // first annotation
         {
@@ -166,6 +152,20 @@ var parseDate = function(d){ return d3.timeParse("%Y-%m-%d")(d)}
      
         svg.append("g")
     .call(makeAnnotations)
+}
+	
+
+let desiredCode = "USA";
+d3.csv("new_countries.csv", function(d) { //for each entry
+	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
+		return {	//parse date from multiple entries
+			date: d3.timeParse("%Y-%m-%d")(d["Date.Year"] + "-" + d["Date.Month"] + "-" + d["Date.Day"]),
+			deaths: +d["Data.Deaths"]
+		};
+	}
+}).then(function(data) {
+	render(data); //then render the data as it has been fully processed
+});
 
 	</script>
 	</center>
