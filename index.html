@@ -119,7 +119,6 @@ d3.csv("new_countries.csv", function(d) { //for each entry
 		};
 	}
 }).then(function(data) {
-	render(data); //then render the data as it has been fully processed
 	var annotations = [ {
       note: {
         label: "My first annotation",
@@ -143,6 +142,8 @@ d3.csv("new_countries.csv", function(d) { //for each entry
         .append("g")
         .attr("class", "annotation-group")
         .call(makeAnnotations)
+	render(data); //then render the data as it has been fully processed
+	
 });
 
 	</script>
