@@ -80,7 +80,7 @@ function render(data) {
 
 	g.append("text") //adds another grouping for the name of the line chart
 		.attr("font-family", "sans-serif")
-		.text("China COVID-19 Deaths - 2022")
+		.text("Germany COVID-19 Deaths - 2022")
 		.attr("font-size", 26)
 		.attr("y", -20)
 		.attr("x", innerWidth / 4);
@@ -104,7 +104,7 @@ function render(data) {
 }
 	
 
-let desiredCode = "GER";
+let desiredCode = "DEU";
 d3.csv("new_countries.csv", function(d) { //for each entry
 	if (d["Location.Code"] == desiredCode && +d["Date.Year"] == 2022 && +d["Date.Month"] <= 7) {
 		return {	//parse date from multiple entries
