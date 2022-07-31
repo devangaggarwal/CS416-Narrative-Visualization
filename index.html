@@ -50,6 +50,27 @@ function render(data) {
 	let scaleY = d3.scaleLinear() //sets up how cases, y axis values will scale
 		.domain([0, d3.max(data, yVal)]).nice()
 		.range([innerHeight, 0])
+	annotations = [{
+        note: {
+          label: "00:00",
+          title: "You"
+        },
+        x:x(0),
+        y:500/2,
+        dy: 20,
+        dx: 20,
+        subject: {
+          radius: 10,
+          radiusPadding: 5
+        },
+        type:d3.annotationCalloutCircle
+       }]
+	makeAnnotations = d3.annotation()
+        .annotations(annotations)
+
+       svg.append('g')
+        .attr('class', 'annotation-group')
+        .call(makeAnnotations)
 
 	let yAxis = d3.axisLeft(scaleY) //left axis is connected to the scaleY now
 		.tickPadding(20)
@@ -123,6 +144,5 @@ d3.csv("new_countries.csv", function(d) { //for each entry
 	</script>
 	</center>
 </body>
-<script src="annotation-1.js"></script>
 	<center><a href="slide-2.html">Next Slide</a></center>
 </html>
