@@ -162,10 +162,6 @@ function displayChart(data, selectState) {
       .delay(function(d,i){console.log(i) ; return(i*100)})
 }
     });
-</script>
-</body>
-<body>
-<script>
 let svg = d3.select("body").append("svg")
 	.attr("width", 850)
 	.attr("height", 400);
@@ -281,6 +277,5 @@ d3.csv("new_countries.csv", function(d) { //for each entry
 }).then(function(data) {
 	render(data); //then render the data as it has been fully processed
 });
-
-</script>
+	</script>
 </body>
