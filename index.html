@@ -2,6 +2,7 @@
 <html = lang="">
 <body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 <center>
 <script>
 let svg = d3.select("body").append("svg")
@@ -119,6 +120,25 @@ d3.csv("new_countries.csv", function(d) { //for each entry
 }).then(function(data) {
 	render(data); //then render the data as it has been fully processed
 });
+const annotations = [
+  {
+    note: {
+      label: "Here is the annotation label",
+      title: "Annotation title"
+    },
+    x: 100,
+    y: 100,
+    dy: 100,
+    dx: 100
+  }
+]
+
+// Add annotation to the chart
+const makeAnnotations = d3.annotation()
+  .annotations(annotations)
+d3.select("#example1")
+  .append("g")
+  .call(makeAnnotations)
 
 	</script>
 	</center>
