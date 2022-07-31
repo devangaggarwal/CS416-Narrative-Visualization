@@ -32,7 +32,6 @@ var options = select
 	.text(function (d) { return d; })
     .attr("value",function(d){return d;});
 
-var selectState = "Washington";
 function onchange() {
 	selectState = d3.select('select').property('value')
     d3.selectAll('svg').remove();
